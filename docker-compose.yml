@@ -1,0 +1,82 @@
+# docker-compose.yml
+# ──────────────────────────────────────────────────────────────────────────
+# Fully self-contained: brings up FRR BGP router + Ryu SDN controller.
+# No Python scripts needed.
+#
+# Usage:
+#   docker compose up -d          # start both containers
+#   docker compose logs -f        # stream logs from both
+#   docker compose down           # stop and remove containers
+#   docker compose build --no-cache  # rebuild Ryu image if you edit ryu_build/
+#
+# First run builds the Ryu image (~2 min). Subsequent runs are instant.
+# ──────────────────────────────────────────────────────────────────────────
+
+services:
+
+  # ── FRR BGP Router ────────────────────────────────────────────────────────
+  frr-bgp-router:
+    image: frrouting/frr:latest
+    container_name: frr-bgp-router
+    privileged: true
+    cap_add:
+      - NET_ADMIN
+      - SYS_ADMIN
+    networks:
+      bgp-net:
+        ipv4_address: 172.20.0.2
+    volumes:
+      # Pre-written config files — no script needed to generate them
+      - "./frr_config/frr.conf:/etc/frr/frr.conf:   rw"
+      - "./frr_config/daemons:/etc/frr/daemons:     rw"
+      - "./frr_config/vtysh.conf:/etc/frr/vtysh.conf:  rw"
+    sysctls:
+      - net.ipv4.ip_forward=1
+      - net.ipv4.conf.all.rp_filter=0
+      - net.ipv4.conf.default.rp_filter=0
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "vtysh", "-c", "show bgp summary"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # ── Ryu SDN Controller ────────────────────────────────────────────────────
+  ryu-sdn-controller:
+    build:
+      context: ./ryu_build       # contains Dockerfile, ryu_bgp_app.py, ryu-bgp.conf
+      dockerfile: Dockerfile
+    image: ryu-bgp-speaker:latest
+    container_name: ryu-sdn-controller
+    privileged: true
+    cap_add:
+      - NET_ADMIN
+    networks:
+      bgp-net:
+        ipv4_address: 172.20.0.3
+    ports:
+      - "6633:6633"              # OpenFlow — OVS/switches connect here
+      - "179:179"                # BGP
+    sysctls:
+      - net.ipv4.ip_forward=1
+    depends_on:
+      frr-bgp-router:
+        condition: service_started
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python3", "-c",
+             "import socket; s=socket.create_connection(('localhost',6633),2)"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+# ── Shared network ────────────────────────────────────────────────────────
+networks:
+  bgp-net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24
+          gateway: 172.20.0.1

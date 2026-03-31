@@ -1,0 +1,38 @@
+[
+  {
+    "name": "vm-alpha-01",
+    "server_id": "a5b4c498-9951-4216-abdc-2942e3183aa4",
+    "status": "SUCCESS",
+    "fixed_ip": "192.168.10.49",
+    "floating_ip": "172.24.4.154"
+  },
+  {
+    "name": "vm-alpha-02",
+    "server_id": "7381c35b-2596-4b70-83bf-0cba22d22699",
+    "status": "SUCCESS",
+    "fixed_ip": "192.168.10.70",
+    "floating_ip": "172.24.4.53"
+  },
+  {
+    "name": "vm-alpha-03",
+    "server_id": "abd8c63c-51e0-4e48-8a5d-a97064a7f56b",
+    "status": "SUCCESS",
+    "fixed_ip": "192.168.10.42",
+    "floating_ip": "172.24.4.165"
+  },
+  {
+    "name": "vm-multi-a",
+    "server_id": "e9611653-1fbb-4496-90a9-600f05cd49df",
+    "status": "SUCCESS",
+    "fixed_ip": "192.168.10.190",
+    "floating_ip": "172.24.4.192"
+  },
+  {
+    "name": "vm-multi-b",
+    "server_id": "ca108d9b-2b06-423c-808f-3fd45ac2f8b8",
+    "status": "SUCCESS",
+    "fixed_ip": "192.168.20.231",
+    "floating_ip": "172.24.4.213"
+  }
+  
+]

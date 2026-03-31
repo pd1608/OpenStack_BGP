@@ -1,0 +1,23 @@
+[
+  {
+    "vn_name": "vn-alpha",
+    "network_id": "fd8377cf-8b75-403f-b109-bd36f881aca0",
+    "subnet_id": "6de07d6b-6f39-4bda-8f1e-0567e50f8a3d",
+    "router_id": "dc368a24-1cd8-48b8-b888-6e4354d76604",
+    "cidr": "192.168.10.0/24"
+  },
+  {
+    "vn_name": "vn-beta",
+    "network_id": "0ff36a06-8182-4165-bde4-94b5ad50142a",
+    "subnet_id": "6c3e836c-8cb1-4910-905b-e3861c3bae1f",
+    "router_id": "dc368a24-1cd8-48b8-b888-6e4354d76604",
+    "cidr": "192.168.20.0/24"
+  },
+  {
+    "vn_name": "vn-gamma",
+    "network_id": "81d574d8-5f8c-4f63-9bf1-b347047977ed",
+    "subnet_id": "df4bbe75-8590-4336-9acf-75fca6ad1b86",
+    "router_id": "dc368a24-1cd8-48b8-b888-6e4354d76604",
+    "cidr": "192.168.30.0/24"
+  }
+]
